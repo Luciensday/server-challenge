@@ -10,19 +10,28 @@ const server = express();
 
 server.get("/", (request, response) => {
   response.send(`
-    <!doctype html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Home</title>
-        <link rel="stylesheet" href="/style.css">
-      </head>
-      <body>
-        <h1>Hello Express</h1>
-      </body>
-    </html>
-    
+  <h1>Hello Express</h1>
     `);
+});
+
+// const staticHandler = express.static("public")
+// server.use(staticHandler)
+
+server.get("/colour", (req, res) => {
+  res.status(200);
+  const hex = req.query.hex || "ffffff"; // defaults to white
+  const html = `
+    <style>
+      body {
+        background-color: #${hex};
+      }
+    </style>
+    <form>
+      <label for="hex">Enter hex</label>
+      <input name="hex" value="${hex}">
+    </form>
+  `;
+  res.send(html);
 });
 
 module.exports = server;
