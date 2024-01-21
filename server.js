@@ -4,7 +4,7 @@ const server = express();
 // function logger(request, response, next) {
 //   console.log(request.method + " " + request.url);
 //   next();
-}
+// }
 
 // server.use(logger);
 
