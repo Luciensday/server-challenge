@@ -25,4 +25,4 @@ server.get("/", (request, response) => {
     `);
 });
 
-module.export = server;
+module.exports = server;
