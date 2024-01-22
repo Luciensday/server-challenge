@@ -1,24 +1,13 @@
 const express = require("express");
 const server = express();
 
-// function logger(request, response, next) {
-//   console.log(request.method + " " + request.url);
-//   next();
-// }
-
-// server.use(logger);
-
-server.get("/", (request, response) => {
-  response.send(`
+server.get("/", (req, res) => {
+  res.send(`
   <h1>Hello Express</h1>
     `);
 });
 
-// const staticHandler = express.static("public")
-// server.use(staticHandler)
-
 server.get("/colour", (req, res) => {
-  res.status(200);
   const hex = req.query.hex || "ffffff"; // defaults to white
   const html = `
     <style>
@@ -32,6 +21,83 @@ server.get("/colour", (req, res) => {
     </form>
   `;
   res.send(html);
+});
+
+const result = [];
+
+server.get("/cheese", (req, res) => {
+  const resultList = result.map((item) => {
+    return `<li>${item.cheeseName} | ${item.rating} Stars</li>`;
+  });
+  const html = `
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Cheese</title>
+      <style>
+          body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              background-color: #f4f4f4;
+          }
+  
+  
+          label {
+              display: block;
+              margin-bottom: 8px;
+              color: blue
+          }
+  
+          input {
+              width: 100%;
+              padding: 8px;
+              margin-bottom: 16px;
+              box-sizing: border-box;
+          }
+  
+          button {
+              background-color: #4caf50;
+              color: #fff;
+              padding: 10px;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+          }
+      </style>
+  </head>
+  <body>
+    <form method="POST" id="cheeseForm">
+      <p>
+        <label for="cheeseName">Cheese name</label>
+        <input name="cheeseName">
+      </p>
+      <p>
+        <label for="rating">Cheese rating</label>
+        <input name="rating" type="range" min="0" max="5" step="0.5">
+      </p>
+      <button type="submit" form="cheeseForm">Rate your cheese</button>
+    </form>
+    <ul>
+      ${resultList.join("")}
+    </ul>
+    </body>
+</html>`;
+  res.send(html);
+});
+
+server.post("/cheese", express.urlencoded({ extended: false }), (req, res) => {
+  const cheeseName = req.body.cheeseName;
+  const rating = req.body.rating;
+  result.push({ cheeseName, rating });
+  res.redirect("/cheese");
+
+  console.log(cheeseName);
 });
 
 module.exports = server;
